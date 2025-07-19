@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+{% block title %}{{news.title}}{% endblock %}
+    {% block extra_css %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: #1a1a2e;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-style: italic;
+            color: #ccc;
+        }
+        
+        nav {
+            background-color: #16213e;
+            padding: 0.5rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #0f3460;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .article-detail {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .article-detail img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .article-content {
+            padding: 2rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .category {
+            display: inline-block;
+            background-color: #e94560;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .article-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a2e;
+        }
+        
+        .article-text {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .article-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .author-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        
+        .author-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        .author-bio {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .related-articles {
+            margin-top: 3rem;
+        }
+        
+        .related-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a2e;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .related-article {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .related-article:hover {
+            transform: translateY(-5px);
+        }
+        
+        .related-article img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .related-content {
+            padding: 1rem;
+        }
+        
+        .related-article h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .read-more {
+            display: inline-block;
+            background-color: #0f3460;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .read-more:hover {
+            background-color: #1a1a2e;
+        }
+        
+        .back-to-home {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #0f3460;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-to-home:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .article-detail img {
+                height: 250px;
+            }
+            
+            .article-title {
+                font-size: 1.5rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 0.3rem 0;
+            }
+        }
+    </style>
+    {% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <a href="{% url 'home' %}" class="back-to-home">&larr; Back to Home</a>
+        
+        <div class="article-detail">
+            <img src="{{ news.image.url }}" alt="{{ news.title }}">
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="category">{{ news.category }}</span>
+                </div>
+                <h1 class="article-title">{{ news.title }}</h1>
+                <div class="article-text">
+                    <p>{{ news.content }}</p>
+                </div>
+                <div class="author-info">
+                    <img src="{{ news.image.url }}" alt="Sarah Johnson" class="author-img">
+                    <div>
+                        <div class="author-name">Sarah Johnson</div>
+                        <div class="author-bio">Senior Political Correspondent with 15 years of experience covering international affairs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="related-articles">
+            <h2 class="related-title">Related Articles</h2>
+            <div class="related-grid">
+                <div class="related-article">
+                    <a href="article-senate-bill.html">
+                        <img src="https://via.placeholder.com/400x250" alt="Senate Passes Bill">
+                        <div class="related-content">
+                            <span class="category">Politics</span>
+                            <h3>Senate Passes Historic Infrastructure Bill</h3>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="related-article">
+                    <a href="article-renewable-energy.html">
+                        <img src="https://via.placeholder.com/400x250" alt="Renewable Energy">
+                        <div class="related-content">
+                            <span class="category">Business</span>
+                            <h3>Renewable Energy Investments Reach Record High</h3>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="related-article">
+                    <a href="article-arctic-ice.html">
+                        <img src="https://via.placeholder.com/400x250" alt="Arctic Ice">
+                        <div class="related-content">
+                            <span class="category">Environment</span>
+                            <h3>Arctic Ice Melting at Alarming Rate, Study Finds</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

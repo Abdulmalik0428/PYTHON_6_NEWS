@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}bosh sahifa{% endblock %}
+    {% block content %}
+    <div class="container">
+        <div class="filter-section">
+            <div class="filter-group">
+                <input type="text" class="search-box" placeholder="Search headlines..." id="searchInput">
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Filter by Category:</span>
+                <button class="filter-btn active" data-category="all">All</button>
+            {% for cat in categories %}
+                <button class="filter-btn" data-category="{{ cat.name|lower }}">
+                    {{ cat.name }} <span class="news-count">({{ cat.new_set.count }})</span>
+                </button>
+            {% endfor %}
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Filter by Date:</span>
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-date="today">Today</button>
+                <button class="filter-btn" data-date="week">This Week</button>
+                <button class="filter-btn" data-date="month">This Month</button>
+            </div>
+        </div>
+        
+        <div class="main-article">
+            <div class="featured" data-category="politics" data-date="today">
+                <img src="https://via.placeholder.com/800x400" alt="Featured News">
+                <div class="featured-content">
+                    <span class="category">Politics</span>
+                    <h2>Global Leaders Meet to Address Climate Change Crisis</h2>
+                    <p>World leaders gathered today at the annual climate summit to discuss urgent measures needed to combat the escalating climate crisis. New agreements are expected to be signed by the end of the week.</p>
+                    <a href="#" class="read-more">Read More</a>
+                </div>
+            </div>
+            
+            <div class="secondary-articles">
+                <div class="secondary-article" data-category="politics" data-date="today">
+                    <img src="https://via.placeholder.com/400x200" alt="News 1">
+                    <div class="secondary-content">
+                        <span class="category">Politics</span>
+                        <h3>Senate Passes Historic Infrastructure Bill</h3>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="secondary-article" data-category="technology" data-date="week">
+                    <img src="https://via.placeholder.com/400x200" alt="News 2">
+                    <div class="secondary-content">
+                        <span class="category">Technology</span>
+                        <h3>New AI Breakthrough Could Revolutionize Healthcare</h3>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if latest_news %}
+        <h2 style="margin: 2rem 0 1rem;">Latest Stories</h2>
+        
+        <div class="article-grid" id="articleGrid">
+            {% for item in latest_news %}
+            <div class="article-card" data-category="sports" data-date="today">
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                <div class="card-content">
+                    <span class="category">{{ item.category }}</span>
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.content | truncatewords:15}}</p>
+                    <a href="{% url "news_detail" item.pk %}" class="read-more">Read More</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+    

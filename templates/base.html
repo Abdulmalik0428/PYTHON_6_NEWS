@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily News - {% block title %} {% endblock %}</title>
+
+    {% block extra_css %}
+    {% endblock %}
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: #1a1a2e;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-style: italic;
+            color: #ccc;
+        }
+        
+        nav {
+            background-color: #16213e;
+            padding: 0.5rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #0f3460;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .filter-section {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn {
+            position: relative;
+            padding: 8px 15px;
+            margin: 5px;
+        }
+
+        .news-count {
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        .filter-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .filter-btn.active {
+            background-color: #0f3460;
+            color: white;
+            border-color: #0f3460;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .main-article {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .featured {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .featured img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .featured-content {
+            padding: 1.5rem;
+        }
+        
+        .featured h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
+        
+        .featured p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+        
+        .read-more {
+            display: inline-block;
+            background-color: #0f3460;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .read-more:hover {
+            background-color: #1a1a2e;
+        }
+        
+        .secondary-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .secondary-article {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .secondary-article img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .secondary-content {
+            padding: 1rem;
+        }
+        
+        .secondary-article h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .article-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .article-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1rem;
+        }
+        
+        .article-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .category {
+            display: inline-block;
+            background-color: #e94560;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            grid-column: 1 / -1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            background-color: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .main-article {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 0.3rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Daily News</div>
+        <div class="tagline">Your trusted source for the latest updates</div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">Politics</a></li>
+            <li><a href="#">Business</a></li>
+            <li><a href="#">Technology</a></li>
+            <li><a href="#">Sports</a></li>
+            <li><a href="#">Entertainment</a></li>
+        </ul>
+    </nav>
+    
+        {% block content %}
+
+        {% endblock %}
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Careers</a>
+        </div>
+        <p>&copy; 2023 Daily News. All rights reserved.</p>
+    </footer>
+
+    {% block extra_js %}
+    {% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const searchInput = document.getElementById('searchInput');
+            const articleGrid = document.getElementById('articleGrid');
+            const articles = document.querySelectorAll('.article-card, .featured, .secondary-article');
+            
+            let activeCategory = 'all';
+            let activeDate = 'all';
+            let searchTerm = '';
+            
+            // Filter by category
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons in the same group
+                    const btnGroup = this.parentElement;
+                    btnGroup.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Determine what type of filter was clicked
+                    if (this.dataset.category) {
+                        activeCategory = this.dataset.category;
+                    } else if (this.dataset.date) {
+                        activeDate = this.dataset.date;
+                    }
+                    
+                    filterArticles();
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                searchTerm = this.value.toLowerCase();
+                filterArticles();
+            });
+            
+            function filterArticles() {
+                let hasResults = false;
+                
+                articles.forEach(article => {
+                    const category = article.dataset.category;
+                    const date = article.dataset.date;
+                    const title = article.querySelector('h2, h3').textContent.toLowerCase();
+                    const content = article.querySelector('p') ? article.querySelector('p').textContent.toLowerCase() : '';
+                    
+                    // Check if article matches all active filters
+                    const matchesCategory = activeCategory === 'all' || category === activeCategory;
+                    const matchesDate = activeDate === 'all' || date === activeDate;
+                    const matchesSearch = searchTerm === '' || 
+                                         title.includes(searchTerm) || 
+                                         content.includes(searchTerm);
+                    
+                    if (matchesCategory && matchesDate && matchesSearch) {
+                        article.style.display = 'block';
+                        hasResults = true;
+                    } else {
+                        article.style.display = 'none';
+                    }
+                });
+                
+                // Show "no results" message if needed
+                const noResults = document.querySelector('.no-results');
+                if (!hasResults) {
+                    if (!noResults) {
+                        const noResultsDiv = document.createElement('div');
+                        noResultsDiv.className = 'no-results';
+                        noResultsDiv.innerHTML = '<h3>No articles match your filters</h3><p>Try adjusting your search criteria</p>';
+                        articleGrid.appendChild(noResultsDiv);
+                    }
+                } else if (noResults) {
+                    noResults.remove();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
