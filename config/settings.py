@@ -118,7 +118,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'assets')  # assets papkasi ichida css, js va img bo'lishi kerak
+    os.path.join(BASE_DIR, 'static')  # assets papkasi ichida css, js va img bo'lishi kerak
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'config/static')  # collectstatic natijasi
 
