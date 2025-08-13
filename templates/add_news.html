@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+    {% block title %} add news {% endblock %}
+    {% block extra_css %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1a1a2e;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input[type="text"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0f3460;
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #0f3460;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1a1a2e;
+        }
+        
+        .btn-secondary {
+            background-color: #666;
+            margin-right: 1rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .image-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .required:after {
+            content: " *";
+            color: #e94560;
+        }
+        
+        .error-message {
+            color: #e94560;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .file-upload-label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .file-upload-label:hover {
+            background-color: #e0e0e0;
+            border-color: #999;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .btn-secondary {
+                margin-right: 0;
+            }
+        }
+    </style>
+    {% endblock %}
+{% block content %}
+
+    <div class="container">
+        <h1>Add News Article</h1>
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title" class="required">Title</label>
+                <input type="text" id="title" name="title" required>
+                <div class="error-message" name="title" id="titleError">Please enter a title</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="category" class="required">Category</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="error-message" id="categoryError">Please select a category</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="content" class="required">Content</label>
+                <textarea id="content" name="content" required></textarea>
+                <div class="error-message" id="contentError">Please enter the article content</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="imageFile">Article Image</label>
+                <div class="file-upload">
+                    <label for="imageFile" class="file-upload-label">Choose an image file</label>
+                    <input type="file" id="imageFile" name="image" accept="image/*" style="display: none;">
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImage" src="#" alt="Image Preview">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <a href="{% url 'home' %}" class="btn btn-secondary ms-2">Bekor qilish</a>
+                <button type="submit" class="btn">Qo'shish</button>
+            </div>
+        </form>
+    </div>
+    {% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('newsForm');
+        const resetBtn = document.getElementById('resetBtn');
+        const imageFile = document.getElementById('imageFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+
+        // Image file preview
+        imageFile.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+
+        // Form validation
+        form.addEventListener('submit', function (e) {
+            let isValid = true;
+
+            const title = document.getElementById('title');
+            const titleError = document.getElementById('titleError');
+            if (!title.value.trim()) {
+                titleError.style.display = 'block';
+                isValid = false;
+            } else {
+                titleError.style.display = 'none';
+            }
+
+            const category = document.getElementById('category');
+            const categoryError = document.getElementById('categoryError');
+            if (!category.value) {
+                categoryError.style.display = 'block';
+                isValid = false;
+            } else {
+                categoryError.style.display = 'none';
+            }
+
+            const content = document.getElementById('content');
+            const contentError = document.getElementById('contentError');
+            if (!content.value.trim()) {
+                contentError.style.display = 'block';
+                isValid = false;
+            } else {
+                contentError.style.display = 'none';
+            }
+
+            if (!isValid) {
+                e.preventDefault();  // faqat xatolik bo‘lsa to‘xtatamiz
+            }
+        });
+
+        // Reset
+        resetBtn.addEventListener('click', function () {
+            form.reset();
+            imagePreview.style.display = 'none';
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+        });
+    });
+</script>
+
+    {% endblock %}
+{% endblock %}

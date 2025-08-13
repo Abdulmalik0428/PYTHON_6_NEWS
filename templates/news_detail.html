@@ -1,324 +1,582 @@
 {% extends 'base.html' %}
 {% block title %}{{news.title}}{% endblock %}
-    {% block extra_css %}
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
-        }
-        
-        header {
-            background-color: #1a1a2e;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tagline {
-            font-style: italic;
-            color: #ccc;
-        }
-        
-        nav {
-            background-color: #16213e;
-            padding: 0.5rem 0;
-        }
-        
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin: 0 1rem;
-        }
-        
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        nav ul li a:hover {
-            background-color: #0f3460;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .article-detail {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+        line-height: 1.6;
+        color: #333;
+        background-color: #f5f5f5;
+    }
+    
+    header {
+        background-color: #1a1a2e;
+        color: white;
+        padding: 1rem 0;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .logo {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .tagline {
+        font-style: italic;
+        color: #ccc;
+    }
+    
+    nav {
+        background-color: #16213e;
+        padding: 0.5rem 0;
+    }
+    
+    nav ul {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+    }
+    
+    nav ul li {
+        margin: 0 1rem;
+    }
+    
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    nav ul li a:hover {
+        background-color: #0f3460;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .article-detail {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .article-detail img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+    
+    .article-content {
+        padding: 2rem;
+    }
+    
+    .article-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .category {
+        display: inline-block;
+        background-color: #e94560;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+    
+    .article-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #1a1a2e;
+    }
+    
+    .article-text {
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    
+    .article-text p {
+        margin-bottom: 1.5rem;
+    }
+    
+    .author-info {
+        display: flex;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+    
+    .author-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 1rem;
+    }
+    
+    .author-name {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+    
+    .author-bio {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .related-articles {
+        margin-top: 3rem;
+    }
+    
+    .related-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #1a1a2e;
+    }
+    
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .related-article {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    
+    .related-article:hover {
+        transform: translateY(-5px);
+    }
+    
+    .related-article img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+    
+    .related-content {
+        padding: 1rem;
+    }
+    
+    .related-article h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .read-more {
+        display: inline-block;
+        background-color: #0f3460;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s;
+    }
+    
+    .read-more:hover {
+        background-color: #1a1a2e;
+    }
+    
+    .back-to-home {
+        display: inline-block;
+        margin-top: 2rem;
+        color: #0f3460;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .back-to-home:hover {
+        text-decoration: underline;
+    }
+    
+    footer {
+        background-color: #1a1a2e;
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 2rem;
+    }
+    
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0;
+    }
+    
+    .footer-links a {
+        color: white;
+        margin: 0 1rem;
+        text-decoration: none;
+    }
+    
+    .footer-links a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Edit and Delete Button Styles */
+    .edit-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #0f3460;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        z-index: 10;
+    }
+    
+    .edit-btn:hover {
+        background-color: #1a1a2e;
+    }
+    
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        display: none;
+    }
+    
+    .submit-btn:hover {
+        background-color: #45a049;
+    }
+    
+    .delete-btn {
+        background-color: #e94560;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        display: none;
+        margin-left: 10px;
+    }
+    
+    .delete-btn:hover {
+        background-color: #d13354;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .editable {
+        border: 1px dashed #ccc;
+        padding: 5px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    
+    .editable-image {
+        position: relative;
+    }
+    
+    .image-upload {
+        display: none;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background-color: rgba(0,0,0,0.7);
+        padding: 10px;
+        border-radius: 4px;
+        color: white;
+    }
+    
+    .editable-image:hover .image-upload {
+        display: block;
+    }
+    
+    .category-select {
+        display: none;
+        background-color: #e94560;
+        color: white;
+        border: none;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+    
+    @media (max-width: 768px) {
         .article-detail img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
-        
-        .article-content {
-            padding: 2rem;
-        }
-        
-        .article-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .category {
-            display: inline-block;
-            background-color: #e94560;
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            height: 250px;
         }
         
         .article-title {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            color: #1a1a2e;
-        }
-        
-        .article-text {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-        
-        .article-text p {
-            margin-bottom: 1.5rem;
-        }
-        
-        .author-info {
-            display: flex;
-            align-items: center;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-        }
-        
-        .author-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 1rem;
-        }
-        
-        .author-name {
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-        }
-        
-        .author-bio {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .related-articles {
-            margin-top: 3rem;
-        }
-        
-        .related-title {
             font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #1a1a2e;
         }
         
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
+        nav ul {
+            flex-direction: column;
+            align-items: center;
         }
         
-        .related-article {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+        nav ul li {
+            margin: 0.3rem 0;
         }
         
-        .related-article:hover {
-            transform: translateY(-5px);
+        .button-group {
+            flex-direction: column;
         }
         
-        .related-article img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+        .delete-btn {
+            margin-left: 0;
+            margin-top: 10px;
         }
-        
-        .related-content {
-            padding: 1rem;
-        }
-        
-        .related-article h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .read-more {
-            display: inline-block;
-            background-color: #0f3460;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.3s;
-        }
-        
-        .read-more:hover {
-            background-color: #1a1a2e;
-        }
-        
-        .back-to-home {
-            display: inline-block;
-            margin-top: 2rem;
-            color: #0f3460;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .back-to-home:hover {
-            text-decoration: underline;
-        }
-        
-        footer {
-            background-color: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 2rem;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            margin: 1rem 0;
-        }
-        
-        .footer-links a {
-            color: white;
-            margin: 0 1rem;
-            text-decoration: none;
-        }
-        
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 768px) {
-            .article-detail img {
-                height: 250px;
-            }
-            
-            .article-title {
-                font-size: 1.5rem;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            nav ul li {
-                margin: 0.3rem 0;
-            }
-        }
-    </style>
-    {% endblock %}
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-    <div class="container">
-        <a href="{% url 'home' %}" class="back-to-home">&larr; Back to Home</a>
-        
-        <div class="article-detail">
-            <img src="{{ news.image.url }}" alt="{{ news.title }}">
-            <div class="article-content">
-                <div class="article-meta">
-                    <span class="category">{{ news.category }}</span>
-                </div>
-                <h1 class="article-title">{{ news.title }}</h1>
-                <div class="article-text">
-                    <p>{{ news.content }}</p>
-                </div>
-                <div class="author-info">
-                    <img src="{{ news.image.url }}" alt="Sarah Johnson" class="author-img">
-                    <div>
-                        <div class="author-name">Sarah Johnson</div>
-                        <div class="author-bio">Senior Political Correspondent with 15 years of experience covering international affairs</div>
-                    </div>
+<div class="container">
+    <a href="{% url 'home' %}" class="back-to-home">&larr; Back to Home</a>
+    
+    <div class="article-detail">
+        <button class="edit-btn" id="editBtn">✏️</button>
+        <form method="POST" enctype="multipart/form-data" action = "{% url 'delete_news' news.id %}">
+            {% csrf_token %}
+            {% if news.image %}
+            <div class="editable-image">
+                <img src="{{ news.image.url }}" alt="{{ news.title }}" id="newsImage">
+                <div class="image-upload">
+                    <input type="file" id="imageUpload" name="image" accept="image/*">
                 </div>
             </div>
-        </div>
-        
-        <div class="related-articles">
-            <h2 class="related-title">Related Articles</h2>
-            <div class="related-grid">
-                <div class="related-article">
-                    <a href="article-senate-bill.html">
-                        <img src="https://via.placeholder.com/400x250" alt="Senate Passes Bill">
-                        <div class="related-content">
-                            <span class="category">Politics</span>
-                            <h3>Senate Passes Historic Infrastructure Bill</h3>
-                        </div>
-                    </a>
+            {% endif %}
+            <div class="article-content">
+                <div class="article-meta">
+                    <select name="category" id="newsCategory" class="category-select">
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if cat.id == news.category.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="category" id="categoryDisplay">{{ news.category.name }}</span>
                 </div>
-                
-                <div class="related-article">
-                    <a href="article-renewable-energy.html">
-                        <img src="https://via.placeholder.com/400x250" alt="Renewable Energy">
-                        <div class="related-content">
-                            <span class="category">Business</span>
-                            <h3>Renewable Energy Investments Reach Record High</h3>
-                        </div>
-                    </a>
+                <h1 class="article-title">
+                    <span id="titleDisplay">{{ news.title }}</span>
+                    <input type="text" id="titleInput" name="title" value="{{ news.title }}" class="editable">
+                </h1>
+                <div class="article-text">
+                    <div id="contentDisplay">
+                        <p>{{ news.content }}</p>
+                    </div>
+                    <textarea id="contentInput" name="content" class="editable">{{ news.content }}</textarea>
                 </div>
-                
-                <div class="related-article">
-                    <a href="article-arctic-ice.html">
-                        <img src="https://via.placeholder.com/400x250" alt="Arctic Ice">
-                        <div class="related-content">
-                            <span class="category">Environment</span>
-                            <h3>Arctic Ice Melting at Alarming Rate, Study Finds</h3>
-                        </div>
-                    </a>
+                <div class="button-group">
+                    <button type="submit" class="submit-btn" id="submitBtn">Saqlash</button>
+                    <button type="button" class="delete-btn" id="deleteBtn">O'chirish</button>
                 </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="related-articles">
+        <h2 class="related-title">Tegishli yangiliklar</h2>
+        <div class="related-grid">
+            <div class="related-article">
+                <a href="#">
+                    <img src="https://via.placeholder.com/400x250" alt="Yangilik 1">
+                    <div class="related-content">
+                        <span class="category">Sport</span>
+                        <h3>Sport yangiliklari</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="related-article">
+                <a href="#">
+                    <img src="https://via.placeholder.com/400x250" alt="Yangilik 2">
+                    <div class="related-content">
+                        <span class="category">Siyosat</span>
+                        <h3>Siyosiy yangiliklar</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="related-article">
+                <a href="#">
+                    <img src="https://via.placeholder.com/400x250" alt="Yangilik 3">
+                    <div class="related-content">
+                        <span class="category">Iqtisod</span>
+                        <h3>Iqtisodiy yangiliklar</h3>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
-    
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editBtn = document.getElementById('editBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const titleDisplay = document.getElementById('titleDisplay');
+        const titleInput = document.getElementById('titleInput');
+        const contentDisplay = document.getElementById('contentDisplay');
+        const contentInput = document.getElementById('contentInput');
+        const categoryDisplay = document.getElementById('categoryDisplay');
+        const categorySelect = document.getElementById('newsCategory');
+        const imageUpload = document.getElementById('imageUpload');
+        const newsImage = document.getElementById('newsImage');
+        
+        // Hide editable fields by default
+        titleInput.style.display = 'none';
+        contentInput.style.display = 'none';
+        categorySelect.style.display = 'none';
+        submitBtn.style.display = 'none';
+        deleteBtn.style.display = 'none';
+        
+        let isEditing = false;
+        
+        // Toggle edit mode
+        editBtn.addEventListener('click', function() {
+            isEditing = !isEditing;
+            
+            if (isEditing) {
+                // Enter edit mode
+                titleDisplay.style.display = 'none';
+                titleInput.style.display = 'block';
+                
+                contentDisplay.style.display = 'none';
+                contentInput.style.display = 'block';
+                
+                categoryDisplay.style.display = 'none';
+                categorySelect.style.display = 'inline-block';
+                
+                submitBtn.style.display = 'block';
+                deleteBtn.style.display = 'block';
+                editBtn.textContent = '✖️';
+            } else {
+                // Exit edit mode
+                titleDisplay.style.display = 'inline';
+                titleInput.style.display = 'none';
+                
+                contentDisplay.style.display = 'block';
+                contentInput.style.display = 'none';
+                
+                categoryDisplay.style.display = 'inline-block';
+                categorySelect.style.display = 'none';
+                
+                submitBtn.style.display = 'none';
+                deleteBtn.style.display = 'none';
+                editBtn.textContent = '✏️';
+            }
+        });
+        
+        // Handle image upload preview
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    newsImage.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Update category display when selection changes
+        categorySelect.addEventListener('change', function() {
+            const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+            categoryDisplay.textContent = selectedOption.text;
+        });
+        
+        // Handle delete button click
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteBtn = document.getElementById('deleteBtn');
+            
+            deleteBtn.addEventListener('click', function() {
+                if(confirm('Haqiqatan ham bu yangilikni o\'chirmoqchimisiz? Bu amalni qaytarib bo\'lmaydi.')) {
+                    // Forma yaratish
+                    const deleteForm = document.createElement('form');
+                    deleteForm.method = 'POST';
+                    deleteForm.action = "{% url 'delete_news' news.id %}";
+                    
+                    // CSRF tokenini qo'shish
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    deleteForm.appendChild(csrfInput);
+                    
+                    // Formani sahifaga qo'shish va yuborish
+                    document.body.appendChild(deleteForm);
+                    deleteForm.submit();
+                }
+            });
+        });
+    });
+
+    // O'chirish tugmasi uchun JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteBtn = document.getElementById('deleteBtn');
+        
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function() {
+                if(confirm('Haqiqatan ham bu yangilikni o\'chirmoqchimisiz?')) {
+                    // Forma yaratish
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{% url 'delete_news' news.id %}";
+                    
+                    // CSRF token
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = "{{ csrf_token }}";
+                    form.appendChild(csrfInput);
+                    
+                    // Formani sahifaga qo'shish
+                    document.body.appendChild(form);
+                    
+                    // Formani yuborish
+                    form.submit();
+                }
+            });
+        } else {
+            console.error("Delete tugmasi topilmadi!");
+        }
+    });
+</script>
 {% endblock %}

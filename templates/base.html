@@ -309,23 +309,97 @@
                 margin: 0.3rem 0;
             }
         }
+        /* Yangilik Qo'shish tugmasi uchun asosiy stillar */
+        .add-news-btn {
+            display: inline-block;
+            background-color: #0f3460; /* Ko'k rang */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+
+        /* Sichqoncha ustiga kelganda effekt */
+        .add-news-btn:hover {
+            background-color: #1a1a2e; /* To'q ko'k rang */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tugma bosilganda effekt */
+        .add-news-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Kichik ekranlar uchun moslashuvchanlik */
+        @media (max-width: 768px) {
+            .add-news-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        /* Navigatsiya konteyneri */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #16213e;
+            padding: 10px 20px;
+        }
+
+        /* Linklar ro'yxati */
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 15px;
+        }
+
+        /* Tugma */
+        .add-news-btn {
+            margin-left: auto; /* O'ng chetga joylashtirish */
+            background-color: #36c644ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .add-news-btn:hover {
+            background-color: #36c644ff;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">Daily News</div>
-        <div class="tagline">Your trusted source for the latest updates</div>
+        <div class="logo">Kundalik yangiliklar</div>
+        <div class="tagline">So'nggi yangiliklar uchun ishonchli manba</div>
     </header>
     
     <nav>
         <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="#">Politics</a></li>
-            <li><a href="#">Business</a></li>
-            <li><a href="#">Technology</a></li>
-            <li><a href="#">Sports</a></li>
-            <li><a href="#">Entertainment</a></li>
+            <li><a href="{% url 'home' %}">Bosh sahifa</a></li>
+            <li><a href="#">Siyosiy</a></li>
+            <li><a href="#">Biznes</a></li>
+            <li><a href="#">Texnologiya</a></li>
+            <li><a href="#">Sport</a></li>
+            <li><a href="#">O'yin-kulgi</a></li>
         </ul>
+        <a href="{% url 'add_news' %}" class="add-news-btn">Yangilik Qo'shish</a>
     </nav>
     
         {% block content %}

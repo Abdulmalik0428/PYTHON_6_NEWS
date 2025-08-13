@@ -61,7 +61,9 @@
         <div class="article-grid" id="articleGrid">
             {% for item in latest_news %}
             <div class="article-card" data-category="sports" data-date="today">
-                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                {% endif %}
                 <div class="card-content">
                     <span class="category">{{ item.category }}</span>
                     <h3>{{ item.title }}</h3>
