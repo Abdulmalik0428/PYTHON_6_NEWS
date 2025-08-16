@@ -2,6 +2,7 @@ from django.shortcuts import redirect , render , get_object_or_404
 from django.urls import reverse
 
 from news.models import New , Category
+from news.forms import AddNewsForm
 
 # Create your views here.
 
@@ -34,22 +35,32 @@ def news_detail_view(request , pk):
 
 def add_news_view(request):
     if request.method == 'GET':
+        news_form = AddNewsForm()
         categories = Category.objects.all()
         date = {
-            'categories': categories
+            'categories': categories,
+            'news_form': news_form,
         }
         return render(request , 'add_news.html' , date)
     elif request.method == "POST" :
-        category = Category.objects.get(id = request.POST.get('category'))
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        image = request.FILES.get('image')
-        news = New.objects.create(title=title,
-                                  category=category,
-                                  content=content,
-                                  image=image,
-                                  )
-        return redirect(reverse('news_detail', kwargs={'pk': news.id}))
+        form = AddNewsForm(request.POST , request.FILES)
+        if form.is_valid():
+            form.save()
+        else:
+            print(f"{error}" for error in form.errors )
+
+        return redirect(reverse('home'))
+        # category = Category.objects.get(id = request.POST.get('category'))
+        # title = request.POST.get('title')
+        # content = request.POST.get('content')
+        # image = request.FILES.get('image')
+        # news = New.objects.create(title=title,
+        #                           category=category,
+        #                           content=content,
+        #                           image=image,
+        #                           )
+        # return redirect(reverse('news_detail', kwargs={'pk': news.id}))
+
         
 def delete_news_view(request,pk):
     news = New.objects.get(id=pk )
